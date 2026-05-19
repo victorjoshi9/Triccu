@@ -63,17 +63,19 @@ export default function CustomerDashboard() {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-2 gap-4">
-        <motion.div 
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.1 }}
-          className="glass-card p-4 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-white/5 transition-colors border-white/5"
-        >
-          <div className="w-12 h-12 rounded-full bg-[#1A1A2E]/50 text-blue-400 flex items-center justify-center mb-2 border border-blue-500/20">
-             <Calendar className="w-6 h-6" />
-          </div>
-          <p className="text-xs font-bold text-white">EMI Schedule</p>
-        </motion.div>
+        <Link href="/customer/loans" className="block">
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="glass-card p-4 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-white/5 transition-colors border-white/5"
+          >
+            <div className="w-12 h-12 rounded-full bg-[#1A1A2E]/50 text-blue-400 flex items-center justify-center mb-2 border border-blue-500/20">
+               <Calendar className="w-6 h-6" />
+            </div>
+            <p className="text-xs font-bold text-white">EMI Schedule</p>
+          </motion.div>
+        </Link>
         
         <motion.div 
           initial={{ y: 20, opacity: 0 }}

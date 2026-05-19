@@ -10,6 +10,10 @@ export default function OnboardingWizard() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  // Payment Schedule & Frequency customization states
+  const [paymentFrequency, setPaymentFrequency] = useState<'monthly' | 'bi-weekly'>('monthly');
+  const [allowBiWeekly, setAllowBiWeekly] = useState(true);
+
   // KYC States
   const [formData, setFormData] = useState({
     fullName: '',
@@ -339,8 +343,50 @@ export default function OnboardingWizard() {
           >
             <div className="mb-8">
               <h1 className="text-2xl font-outfit font-bold text-white mb-2">Auto-Pay Setup</h1>
-              <p className="text-sm text-white/60">Register your NACH mandate to automate your monthly EMI payments. This ensures you never miss a payment and avoid late fees.</p>
+              <p className="text-sm text-white/60">Register your NACH mandate to automate your payments. This ensures you never miss a payment and avoid late fees.</p>
             </div>
+
+            {/* Optional Settings Feature Toggle for Admin/Customer Choice */}
+            <div className="bg-white/5 border border-white/5 p-4 rounded-2xl mb-6 text-xs flex items-center justify-between">
+              <div className="flex flex-col space-y-0.5">
+                <span className="font-bold text-white uppercase tracking-wider text-[10px]">Bi-Weekly Selection</span>
+                <span className="text-white/40">Allow customer to select bi-weekly schedule</span>
+              </div>
+              <button 
+                onClick={() => {
+                  setAllowBiWeekly(prev => {
+                    const nextVal = !prev;
+                    if (!nextVal) setPaymentFrequency('monthly');
+                    return nextVal;
+                  });
+                }} 
+                className={`w-10 h-6 rounded-full p-1 transition-colors flex items-center ${allowBiWeekly ? 'bg-emerald-500 justify-end' : 'bg-white/10 justify-start'}`}
+              >
+                <div className="w-4 h-4 bg-white rounded-full shadow-sm" />
+              </button>
+            </div>
+
+            {/* Segmented control for choosing Monthly vs Bi-Weekly schedule */}
+            {allowBiWeekly && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                className="flex p-1 bg-[#1A1A2E]/50 border border-white/5 rounded-2xl mb-6 relative z-20"
+              >
+                <button 
+                  onClick={() => setPaymentFrequency('monthly')}
+                  className={`flex-1 py-3 rounded-xl font-bold text-[10px] uppercase tracking-[0.2em] transition-all duration-300 ${paymentFrequency === 'monthly' ? 'red-gradient-bg text-white shadow-md' : 'text-white/30 hover:text-white/50'}`}
+                >
+                  Monthly
+                </button>
+                <button 
+                  onClick={() => setPaymentFrequency('bi-weekly')}
+                  className={`flex-1 py-3 rounded-xl font-bold text-[10px] uppercase tracking-[0.2em] transition-all duration-300 ${paymentFrequency === 'bi-weekly' ? 'red-gradient-bg text-white shadow-md' : 'text-white/30 hover:text-white/50'}`}
+                >
+                  Bi-Weekly
+                </button>
+              </motion.div>
+            )}
 
             <div className="glass-card p-6 border-white/5 flex flex-col items-center justify-center text-center mb-6 shadow-2xl shadow-blue-900/10">
               <div className="w-20 h-20 rounded-full bg-blue-500/20 flex items-center justify-center mb-4 border border-blue-500/30 relative">
@@ -352,16 +398,24 @@ export default function OnboardingWizard() {
               
               <div className="w-full mt-6 bg-[#1A1A2E]/50 rounded-xl p-4 text-left border border-white/5">
                 <div className="flex justify-between mb-2">
-                  <span className="text-xs text-white/50 font-medium">Monthly EMI</span>
-                  <span className="text-xs font-bold text-white">Rs. 6,450</span>
+                  <span className="text-xs text-white/50 font-medium">
+                    {paymentFrequency === 'monthly' ? 'Monthly EMI' : 'Bi-Weekly Payment'}
+                  </span>
+                  <span className="text-xs font-bold text-white">
+                    {paymentFrequency === 'monthly' ? 'Rs. 6,450' : 'Rs. 2,980'}
+                  </span>
                 </div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-xs text-white/50 font-medium">Auto-debit Date</span>
-                  <span className="text-xs font-bold text-white">5th of every month</span>
+                  <span className="text-xs text-white/50 font-medium">Auto-debit Interval</span>
+                  <span className="text-xs font-bold text-white">
+                    {paymentFrequency === 'monthly' ? '5th of every month' : 'Every alternate Tuesday'}
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-xs text-white/50 font-medium">Tenure</span>
-                  <span className="text-xs font-bold text-white">12 Months</span>
+                  <span className="text-xs text-white/50 font-medium">Installments & Tenure</span>
+                  <span className="text-xs font-bold text-white">
+                    {paymentFrequency === 'monthly' ? '12 Payments (12 Months)' : '26 Payments (Approx. 1 Year)'}
+                  </span>
                 </div>
               </div>
             </div>

@@ -22,6 +22,8 @@ interface LoanProcessProps {
 export default function LoanProcess({ onClose, onSuccess }: LoanProcessProps) {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [loanFrequency, setLoanFrequency] = useState<'monthly' | 'bi-weekly'>('monthly');
+  const [allowAgentBiWeekly, setAllowAgentBiWeekly] = useState(true);
 
   const particles = [
     { id: 0, x: -120, duration: 2.5 },
@@ -132,7 +134,7 @@ export default function LoanProcess({ onClose, onSuccess }: LoanProcessProps) {
                 initial={{ x: 30, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: -30, opacity: 0 }}
-                className="space-y-8 text-center"
+                className="space-y-6 text-center"
               >
                 <div className="w-24 h-24 rounded-[32px] bg-white/5 border border-emerald-500/20 flex items-center justify-center mx-auto shadow-inner relative group">
                    <div className="absolute inset-0 bg-emerald-500/10 rounded-[inherit] blur-2xl group-hover:bg-emerald-500/20 transition-all" />
@@ -145,6 +147,44 @@ export default function LoanProcess({ onClose, onSuccess }: LoanProcessProps) {
                    <h3 className="text-2xl font-black text-white italic tracking-tighter">Razorpay <span className="text-emerald-400 font-normal not-italic tracking-normal">e-NACH</span></h3>
                    <p className="text-[11px] text-emerald-400/40 mt-1.5 uppercase font-black tracking-[0.3em] neon-glow-text">SECURE AUTOPAY SETUP</p>
                 </div>
+
+                {/* Switch to enable/disable alternative schedule selection */}
+                <div className="bg-white/5 border border-white/10 p-3 rounded-2xl text-left text-xs flex items-center justify-between">
+                  <div className="flex flex-col">
+                    <span className="font-bold text-white text-[10px] uppercase tracking-wider">Alt Schedule Toggle</span>
+                    <span className="text-white/40 text-[9px]">Allow bi-weekly scheduling for customers</span>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      setAllowAgentBiWeekly(prev => {
+                        const nextVal = !prev;
+                        if (!nextVal) setLoanFrequency('monthly');
+                        return nextVal;
+                      });
+                    }} 
+                    className={`w-9 h-5 rounded-full p-0.5 transition-colors flex items-center ${allowAgentBiWeekly ? 'bg-emerald-500 justify-end' : 'bg-white/10 justify-start'}`}
+                  >
+                    <div className="w-3.5 h-3.5 bg-white rounded-full shadow-sm" />
+                  </button>
+                </div>
+
+                {/* Dynamic Choice tabs */}
+                {allowAgentBiWeekly && (
+                  <div className="flex p-0.5 bg-white/5 border border-white/5 rounded-2xl relative z-20">
+                    <button 
+                      onClick={() => setLoanFrequency('monthly')}
+                      className={`flex-1 py-2 rounded-xl font-bold text-[9px] uppercase tracking-widest transition-all ${loanFrequency === 'monthly' ? 'green-gradient-bg text-white shadow-md' : 'text-white/30'}`}
+                    >
+                      Monthly
+                    </button>
+                    <button 
+                      onClick={() => setLoanFrequency('bi-weekly')}
+                      className={`flex-1 py-2 rounded-xl font-bold text-[9px] uppercase tracking-widest transition-all ${loanFrequency === 'bi-weekly' ? 'green-gradient-bg text-white shadow-md' : 'text-white/30'}`}
+                    >
+                      Bi-Weekly
+                    </button>
+                  </div>
+                )}
                 
                 <div className="glass-card-light space-y-5 text-left p-6 border-white/10 rounded-[32px] relative overflow-hidden group">
                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent pointer-events-none" />
@@ -154,12 +194,18 @@ export default function LoanProcess({ onClose, onSuccess }: LoanProcessProps) {
                    </div>
                    <div className="grid grid-cols-2 gap-6 relative z-10">
                       <div>
-                        <span className="text-[9px] uppercase font-black text-white/20 block mb-1.5 tracking-widest">EMI AMOUNT</span>
-                        <span className="text-lg font-black text-white green-gradient-text">₹ 5,240</span>
+                        <span className="text-[9px] uppercase font-black text-white/20 block mb-1.5 tracking-widest">
+                          {loanFrequency === 'monthly' ? 'Monthly EMI' : 'Bi-Weekly Pay'}
+                        </span>
+                        <span className="text-lg font-black text-white green-gradient-text">
+                          {loanFrequency === 'monthly' ? '₹ 5,240' : '₹ 2,420'}
+                        </span>
                       </div>
                       <div>
                         <span className="text-[9px] uppercase font-black text-white/20 block mb-1.5 tracking-widest">FREQUENCY</span>
-                        <span className="text-lg font-black text-white uppercase italic">Monthly</span>
+                        <span className="text-lg font-black text-white uppercase italic">
+                          {loanFrequency === 'monthly' ? 'Monthly' : 'Bi-Weekly'}
+                        </span>
                       </div>
                    </div>
                 </div>
