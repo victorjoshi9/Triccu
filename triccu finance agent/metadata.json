@@ -1,0 +1,6 @@
+{
+  "name": "Triccu Finance",
+  "description": "A consumer lending platform enabling device financing through a network of agents and shop owners.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
