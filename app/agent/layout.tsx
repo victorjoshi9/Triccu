@@ -48,8 +48,8 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
         </div>
         
         {/* Modern Floating Bottom Nav */}
-        <div className="fixed bottom-0 w-full max-w-[366px] px-6 pb-8 pt-2 z-40 pointer-events-none">
-          <div className="glass-card border-white/10 rounded-[32px] px-6 py-3 flex justify-between items-center shadow-[0_20px_50px_rgba(0,0,0,0.6)] pointer-events-auto">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-md px-6 z-40 pointer-events-none">
+          <div className="glass-card border-white/10 rounded-[32px] px-6 py-3 flex justify-between items-center shadow-[0_20px_50px_rgba(0,0,0,0.6)] pointer-events-auto bg-black/45 backdrop-blur-xl">
             <Link href="/agent" className="flex flex-col items-center gap-1.5 text-emerald-400 transition-all active:scale-90 group relative">
               <Home className="w-5.5 h-5.5 drop-shadow-[0_0_10px_rgba(16,185,129,0.5)] transition-transform group-hover:-translate-y-1" />
               <span className="text-[9px] font-black uppercase tracking-widest neon-glow-text">Home</span>

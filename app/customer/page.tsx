@@ -15,8 +15,13 @@ export default function CustomerDashboard() {
           <p className="text-xs text-white/50 font-medium mb-1">Welcome back,</p>
           <h2 className="text-xl font-bold text-white">Sneha Gupta</h2>
         </div>
-        <div className="w-10 h-10 rounded-full overflow-hidden relative border border-white/10 shadow-sm glass-card">
-           <Image src="https://picsum.photos/seed/sneha/100/100" alt="Profile" fill className="object-cover" referrerPolicy="no-referrer" />
+        <div className="flex items-center gap-3">
+          <Link href="/customer/onboarding" className="text-[10px] font-bold uppercase tracking-widest text-red-400 bg-red-500/10 border border-red-500/20 px-3 py-1.5 rounded-full hover:bg-red-500/20 transition-colors">
+            Start Onboarding
+          </Link>
+          <div className="w-10 h-10 rounded-full overflow-hidden relative border border-white/10 shadow-sm glass-card">
+             <Image src="https://picsum.photos/seed/sneha/100/100" alt="Profile" fill className="object-cover" referrerPolicy="no-referrer" />
+          </div>
         </div>
       </header>
 
