@@ -10,6 +10,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Device Locks', href: '/locks', icon: Lock },
     { name: 'Shops & Wallets', href: '/wallets', icon: Wallet },
     { name: 'API & Integrations', href: '/api-hub', icon: Settings },
+    { name: 'API Tester (Internal)', href: '/api-tester', icon: FileText },
     { name: 'Reports', href: '/reports', icon: FileText },
   ];
 
