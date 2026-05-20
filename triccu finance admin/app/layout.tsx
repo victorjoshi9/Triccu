@@ -8,9 +8,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Users', href: '/users', icon: Users },
     { name: 'Loans', href: '/loans', icon: Briefcase },
     { name: 'Device Locks', href: '/locks', icon: Lock },
-    { name: 'Wallets', href: '/wallets', icon: Wallet },
+    { name: 'Shops & Wallets', href: '/wallets', icon: Wallet },
+    { name: 'API & Integrations', href: '/api-hub', icon: Settings },
     { name: 'Reports', href: '/reports', icon: FileText },
-    { name: 'Settings', href: '/settings', icon: Settings },
   ];
 
   return (

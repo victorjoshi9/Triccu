@@ -76,16 +76,24 @@ export default function DeviceLocksPage() {
                  <p className="text-sm text-gray-500">Contact: {loan.customers?.phone}</p>
               </div>
 
-              <button 
-                onClick={() => toggleLock(loan.id, loan.device_status)}
-                className={`w-full py-3 rounded-xl font-bold flex justify-center items-center gap-2 transition-colors ${
-                  loan.device_status === 'LOCKED' 
-                    ? 'bg-green-50 text-green-600 hover:bg-green-100' 
-                    : 'bg-red-50 text-red-600 hover:bg-red-100'
-                }`}
-              >
-                {loan.device_status === 'LOCKED' ? <><Unlock className="w-4 h-4"/> Unlock Device</> : <><Lock className="w-4 h-4"/> Lock Device</>}
-              </button>
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => toggleLock(loan.id, loan.device_status)}
+                  className={`flex-1 py-3 rounded-xl font-bold flex justify-center items-center gap-2 transition-colors ${
+                    loan.device_status === 'LOCKED' 
+                      ? 'bg-green-50 text-green-600 hover:bg-green-100' 
+                      : 'bg-orange-50 text-orange-600 hover:bg-orange-100'
+                  }`}
+                >
+                  {loan.device_status === 'LOCKED' ? <><Unlock className="w-4 h-4"/> Unlock</> : <><Lock className="w-4 h-4"/> Lock</>}
+                </button>
+                <button 
+                  onClick={() => alert('Simulating Revoke action...')}
+                  className="flex-1 py-3 bg-red-50 text-red-600 hover:bg-red-100 rounded-xl font-bold flex justify-center items-center gap-2 transition-colors"
+                >
+                  <AlertTriangle className="w-4 h-4"/> Revoke
+                </button>
+              </div>
             </motion.div>
           ))}
           

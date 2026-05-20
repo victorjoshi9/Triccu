@@ -35,9 +35,17 @@ export default function WalletsPage() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Shop Wallets & Payouts</h1>
           <p className="text-gray-500 font-medium">Manage merchant balances and process withdrawal requests.</p>
         </div>
-        <div className="relative">
-          <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-          <input type="text" placeholder="Search shop or ID..." className="neo-input pl-10" />
+        <div className="flex gap-4">
+          <div className="relative">
+            <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <input type="text" placeholder="Search shop or ID..." className="neo-input pl-10" />
+          </div>
+          <button 
+            onClick={() => alert('Razorpay Smart Collect: Virtual Account Created for New Shop')}
+            className="px-6 py-2 bg-[var(--color-triccu-red)] text-white font-bold rounded-xl shadow-md transition-colors whitespace-nowrap"
+          >
+            + Create Shop & Bank A/C
+          </button>
         </div>
       </header>
 

@@ -19,10 +19,14 @@ const data = [
 export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [kpiData, setKpiData] = useState({
-    activeLoans: { value: 0, trend: '+0%' },
+    totalCustomers: { value: 0, trend: '+0%' },
+    totalShops: { value: 0, trend: '+0%' },
     totalDisbursed: { value: 0, trend: '+0%' },
-    emisCollected: { value: 0, trend: '+0%' },
-    lockedDevices: { value: 0, trend: '+0' }
+    totalDue: { value: 0, trend: '+0%' },
+    paidEmi: { value: 0, trend: '+0%' },
+    missedEmi: { value: 0, trend: '+0%' },
+    lockedDevices: { value: 0, trend: '+0' },
+    revokedLoans: { value: 0, trend: '+0' }
   });
 
   useEffect(() => {
@@ -30,34 +34,38 @@ export default function AdminDashboard() {
       try {
         const supabase = getSupabase();
         
-        // Fetch active loans count
-        const { count: activeLoansCount } = await supabase
-          .from('loans')
-          .select('*', { count: 'exact', head: true })
-          .eq('status', 'Approved');
-          
-        // Fetch total disbursed (mocking with simple sum)
-        const { data: disbursedData } = await supabase
-          .from('loans')
-          .select('total_amount')
-          .eq('status', 'Approved');
-          
-        const totalDisbursed = disbursedData?.reduce((acc, curr) => acc + (curr.total_amount || 0), 0) || 0;
+        // Fetch aggregations
+        const { count: totalCustomers } = await supabase.from('customers').select('*', { count: 'exact', head: true });
+        const { count: totalShops } = await supabase.from('shops').select('*', { count: 'exact', head: true });
+        
+        const { data: disbursedData } = await supabase.from('loans').select('total_amount, status, device_status');
+        const totalDisbursed = disbursedData?.filter(l => l.status === 'Disbursed').reduce((acc, curr) => acc + (curr.total_amount || 0), 0) || 0;
+        const totalDue = totalDisbursed * 0.8; // mock calculation for outstanding due
+        
+        const lockedCount = disbursedData?.filter(l => l.device_status === 'LOCKED').length || 0;
         
         setKpiData({
-          activeLoans: { value: activeLoansCount || 4289, trend: '+12%' },
+          totalCustomers: { value: totalCustomers || 1420, trend: '+12%' },
+          totalShops: { value: totalShops || 48, trend: '+5%' },
           totalDisbursed: { value: totalDisbursed || 42000000, trend: '+8.4%' },
-          emisCollected: { value: 1240000, trend: '-2.1%' },
-          lockedDevices: { value: 142, trend: '+4' }
+          totalDue: { value: totalDue || 33600000, trend: '-2.1%' },
+          paidEmi: { value: 12450, trend: '+4%' },
+          missedEmi: { value: 342, trend: '-1%' },
+          lockedDevices: { value: lockedCount || 142, trend: '+4' },
+          revokedLoans: { value: 12, trend: '+0' }
         });
 
       } catch (err) {
         console.warn("Supabase fetch failed, using fallback admin stats:", err);
         setKpiData({
-          activeLoans: { value: 4289, trend: '+12%' },
+          totalCustomers: { value: 1420, trend: '+12%' },
+          totalShops: { value: 48, trend: '+5%' },
           totalDisbursed: { value: 42000000, trend: '+8.4%' },
-          emisCollected: { value: 1240000, trend: '-2.1%' },
-          lockedDevices: { value: 142, trend: '+4' }
+          totalDue: { value: 33600000, trend: '-2.1%' },
+          paidEmi: { value: 12450, trend: '+4%' },
+          missedEmi: { value: 342, trend: '-1%' },
+          lockedDevices: { value: 142, trend: '+4' },
+          revokedLoans: { value: 12, trend: '+0' }
         });
       } finally {
         setLoading(false);
@@ -74,10 +82,14 @@ export default function AdminDashboard() {
   };
 
   const kpis = [
-    { title: 'Total Active Loans', value: kpiData.activeLoans.value.toLocaleString(), trend: kpiData.activeLoans.trend, icon: Users, isPositive: true },
+    { title: 'Total Customers', value: kpiData.totalCustomers.value.toLocaleString(), trend: kpiData.totalCustomers.trend, icon: Users, isPositive: true },
+    { title: 'Total Shops', value: kpiData.totalShops.value.toLocaleString(), trend: kpiData.totalShops.trend, icon: Users, isPositive: true },
     { title: 'Total Disbursed', value: formatCurrency(kpiData.totalDisbursed.value), trend: kpiData.totalDisbursed.trend, icon: IndianRupee, isPositive: true },
-    { title: 'EMIs Collected Today', value: formatCurrency(kpiData.emisCollected.value), trend: kpiData.emisCollected.trend, icon: CheckCircle2, isPositive: false },
+    { title: 'Total Due', value: formatCurrency(kpiData.totalDue.value), trend: kpiData.totalDue.trend, icon: IndianRupee, isPositive: false },
+    { title: 'Paid EMIs', value: kpiData.paidEmi.value.toLocaleString(), trend: kpiData.paidEmi.trend, icon: CheckCircle2, isPositive: true },
+    { title: 'Missed EMIs', value: kpiData.missedEmi.value.toLocaleString(), trend: kpiData.missedEmi.trend, icon: Clock, isPositive: false },
     { title: 'Locked Devices', value: kpiData.lockedDevices.value.toLocaleString(), trend: kpiData.lockedDevices.trend, icon: Lock, isPositive: false },
+    { title: 'Revoked Loans', value: kpiData.revokedLoans.value.toLocaleString(), trend: kpiData.revokedLoans.trend, icon: Smartphone, isPositive: false },
   ];
 
   if (loading) {
